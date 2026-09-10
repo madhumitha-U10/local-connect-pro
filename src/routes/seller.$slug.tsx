@@ -155,9 +155,19 @@ function SellerProfile() {
                 )}
               </div>
             </div>
-            <Button variant="outline" size="icon" onClick={share} aria-label="Share profile">
-              <Share2 className="size-4" />
-            </Button>
+            <ShareDialog
+              trigger={
+                <Button variant="outline" size="icon" aria-label="Share profile">
+                  <Share2 className="size-4" />
+                </Button>
+              }
+              title={seller.businessName}
+              url={shopUrl}
+              shareText={`${seller.businessName} on NammaSpot`}
+              instagram={seller.instagram}
+              sellerId={seller.id}
+              fileName={`nammaspot-${seller.slug}-qr`}
+            />
           </div>
 
           <div className="mt-5 flex flex-wrap gap-2">
