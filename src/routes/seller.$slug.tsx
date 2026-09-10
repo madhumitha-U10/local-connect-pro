@@ -161,7 +161,7 @@ function SellerProfile() {
                   <Share2 className="size-4" />
                 </Button>
               }
-              title={`Share ${seller.businessName}`}
+              title={seller.businessName}
               url={shopUrl}
               shareText={`${seller.businessName} on NammaSpot`}
               instagram={seller.instagram}
