@@ -14,6 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price: number | null
+          reel_url: string | null
+          seller_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price?: number | null
+          reel_url?: string | null
+          seller_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price?: number | null
+          reel_url?: string | null
+          seller_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       seller_accounts: {
         Row: {
           created_at: string
@@ -38,15 +136,158 @@ export type Database = {
         }
         Relationships: []
       }
+      seller_updates: {
+        Row: {
+          announcement: string | null
+          closing_time: string | null
+          created_at: string
+          id: string
+          location_text: string | null
+          maps_url: string | null
+          opening_time: string | null
+          seller_id: string
+          status: Database["public"]["Enums"]["day_status"]
+          update_date: string
+          updated_at: string
+        }
+        Insert: {
+          announcement?: string | null
+          closing_time?: string | null
+          created_at?: string
+          id?: string
+          location_text?: string | null
+          maps_url?: string | null
+          opening_time?: string | null
+          seller_id: string
+          status: Database["public"]["Enums"]["day_status"]
+          update_date: string
+          updated_at?: string
+        }
+        Update: {
+          announcement?: string | null
+          closing_time?: string | null
+          created_at?: string
+          id?: string
+          location_text?: string | null
+          maps_url?: string | null
+          opening_time?: string | null
+          seller_id?: string
+          status?: Database["public"]["Enums"]["day_status"]
+          update_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_updates_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sellers: {
+        Row: {
+          base_location: string
+          business_name: string
+          category_id: string
+          created_at: string
+          description: string | null
+          id: string
+          instagram_id: string
+          owner_name: string
+          profile_image_url: string | null
+          slug: string
+          status: Database["public"]["Enums"]["seller_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          base_location: string
+          business_name: string
+          category_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          instagram_id: string
+          owner_name: string
+          profile_image_url?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["seller_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          base_location?: string
+          business_name?: string
+          category_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          instagram_id?: string
+          owner_name?: string
+          profile_image_url?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["seller_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sellers_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sellers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       nammaspot_id_available: { Args: { _id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "seller"
+      day_status: "open" | "closed" | "holiday"
+      seller_status: "draft" | "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -173,6 +414,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "seller"],
+      day_status: ["open", "closed", "holiday"],
+      seller_status: ["draft", "pending", "approved", "rejected"],
+    },
   },
 } as const
