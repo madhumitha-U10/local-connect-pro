@@ -1,19 +1,23 @@
 import { Link } from "@tanstack/react-router";
-import { Compass, Grid2x2, Heart, Home, MapPin } from "lucide-react";
+import { Grid2x2, Home, LayoutDashboard, Search, UserRound } from "lucide-react";
 
-const TABS = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/explore", label: "Explore", icon: Compass },
-  { to: "/categories", label: "Categories", icon: Grid2x2 },
-  { to: "/near-me", label: "Near me", icon: MapPin },
-  { to: "/saved", label: "Saved", icon: Heart },
-] as const;
+import { useAuth } from "@/hooks/use-auth";
 
 export function MobileTabBar() {
+  const { user } = useAuth();
+  const tabs = [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/categories", label: "Categories", icon: Grid2x2 },
+    { to: "/sellers", label: "Sellers", icon: Search },
+    user
+      ? { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard }
+      : { to: "/login", label: "Login", icon: UserRound },
+  ] as const;
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-      <ul className="grid grid-cols-5">
-        {TABS.map(({ to, label, icon: Icon }) => (
+      <ul className="grid grid-cols-4">
+        {tabs.map(({ to, label, icon: Icon }) => (
           <li key={to}>
             <Link
               to={to}
