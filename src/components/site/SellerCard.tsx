@@ -1,69 +1,54 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin, Instagram, BadgeCheck } from "lucide-react";
+import { MapPin } from "lucide-react";
 
-import { Rating } from "@/components/site/Rating";
 import { SellerAvatar } from "@/components/site/SellerAvatar";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { categoryById, inr, type Seller } from "@/lib/api";
+import type { SellerCardData } from "@/lib/public.functions";
 
-export function SellerCard({ seller }: { seller: Seller }) {
-  const category = categoryById(seller.categoryId);
-
+export function SellerCard({ seller }: { seller: SellerCardData }) {
   return (
     <Link
       to="/seller/$slug"
       params={{ slug: seller.slug }}
-      aria-label={`${seller.businessName} in ${seller.area}`}
-      className="group card-soft flex min-h-[112px] gap-3.5 overflow-hidden p-3.5 transition-shadow hover:shadow-[var(--shadow-lift)] sm:p-4"
+      className="card-soft flex gap-4 p-4 transition-colors hover:border-primary"
     >
-      <SellerAvatar name={seller.businessName} src={seller.imageUrl} size="md" />
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div className="flex min-w-0 items-start justify-between gap-2">
-          <h3 className="min-w-0 truncate text-base font-bold">
-            {seller.businessName}
-            {seller.status === "approved" && (
-              <BadgeCheck
-                className="ml-1 inline size-4 align-[-2px] text-primary"
-                aria-label="Verified seller"
-              />
-            )}
-          </h3>
-          {seller.featured && (
-            <Badge variant="secondary" className="shrink-0 text-[10px] uppercase tracking-wide">
-              Featured
-            </Badge>
-          )}
-        </div>
-        <p className="line-clamp-2 text-xs text-muted-foreground">{seller.tagline}</p>
-        {category && <p className="text-[11px] font-medium text-primary/80">{category.name}</p>}
-        <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-1.5 text-xs text-muted-foreground">
-          <Rating value={seller.rating} count={seller.reviewCount} />
-          <span className="inline-flex items-center gap-1">
-            <MapPin className="size-3.5" aria-hidden />
-            {seller.area}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <Instagram className="size-3.5" aria-hidden />@{seller.instagram}
-          </span>
-        </div>
-        <p className="text-xs font-semibold text-primary">From {inr(seller.priceFrom)}</p>
+      <SellerAvatar name={seller.business_name} src={seller.profile_image_url ?? undefined} />
+      <div className="min-w-0 flex-1">
+        {seller.categories && (
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+            {seller.categories.name}
+          </p>
+        )}
+        <h3 className="truncate text-base font-bold">{seller.business_name}</h3>
+        <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+          <MapPin className="size-3" aria-hidden /> {seller.base_location}
+        </p>
+        {seller.description && (
+          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+            {seller.description}
+          </p>
+        )}
       </div>
     </Link>
   );
 }
 
-/** Loading placeholder that matches the card layout. */
-export function SellerCardSkeleton() {
+export function SellerGrid({
+  sellers,
+  empty = "No sellers found. Try a different search or category.",
+}: {
+  sellers: SellerCardData[];
+  empty?: string;
+}) {
+  if (sellers.length === 0) {
+    return (
+      <div className="card-soft p-8 text-center text-sm text-muted-foreground">{empty}</div>
+    );
+  }
   return (
-    <div className="card-soft flex min-h-[112px] gap-3.5 p-3.5 sm:p-4">
-      <Skeleton className="size-16 shrink-0 rounded-full" />
-      <div className="flex-1 space-y-2">
-        <Skeleton className="h-4 w-2/3" />
-        <Skeleton className="h-3 w-full" />
-        <Skeleton className="h-3 w-1/2" />
-        <Skeleton className="h-3 w-1/3" />
-      </div>
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {sellers.map((s) => (
+        <SellerCard key={s.id} seller={s} />
+      ))}
     </div>
   );
 }
