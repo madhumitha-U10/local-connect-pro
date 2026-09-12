@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SellersRouteImport } from './routes/sellers'
 import { Route as SellerSlugRouteImport } from './routes/seller.$slug'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media.$'
@@ -29,6 +30,11 @@ const CategoriesRoute = CategoriesRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SellersRoute = SellersRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
   '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/sellers': typeof SellersRoute
   '/seller/$slug': typeof SellerSlugRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
   '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/sellers': typeof SellersRoute
   '/seller/$slug': typeof SellerSlugRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/categories': typeof CategoriesRoute
   '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/sellers': typeof SellersRoute
   '/seller/$slug': typeof SellerSlugRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categories'
     | '/login'
+    | '/register'
     | '/sellers'
     | '/seller/$slug'
     | '/api/public/media/$'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categories'
     | '/login'
+    | '/register'
     | '/sellers'
     | '/seller/$slug'
     | '/api/public/media/$'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categories'
     | '/login'
+    | '/register'
     | '/sellers'
     | '/seller/$slug'
     | '/api/public/media/$'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoriesRoute: typeof CategoriesRoute
   LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   SellersRoute: typeof SellersRoute
   SellerSlugRoute: typeof SellerSlugRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
@@ -129,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sellers': {
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoriesRoute: CategoriesRoute,
   LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   SellersRoute: SellersRoute,
   SellerSlugRoute: SellerSlugRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
