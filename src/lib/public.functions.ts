@@ -101,7 +101,7 @@ export const searchSellers = createServerFn({ method: "GET" })
       );
     }
     const { data: rows } = await query;
-    return (rows ?? []) as SellerCardData[];
+    return (rows ?? []) as unknown as SellerCardData[];
   });
 
 export const getSellerPage = createServerFn({ method: "GET" })
