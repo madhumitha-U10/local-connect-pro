@@ -44,11 +44,6 @@ export function Footer() {
                 Seller login
               </Link>
             </li>
-            <li>
-              <Link to="/admin/login" className="text-muted-foreground hover:text-primary">
-                Admin
-              </Link>
-            </li>
           </ul>
         </nav>
       </div>
