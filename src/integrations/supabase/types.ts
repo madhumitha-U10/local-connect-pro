@@ -112,6 +112,32 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_sellers: {
+        Row: {
+          created_at: string
+          seller_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          seller_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          seller_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_sellers_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seller_accounts: {
         Row: {
           created_at: string
@@ -135,6 +161,64 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      seller_events: {
+        Row: {
+          created_at: string
+          event: Database["public"]["Enums"]["seller_event"]
+          id: string
+          seller_id: string
+        }
+        Insert: {
+          created_at?: string
+          event: Database["public"]["Enums"]["seller_event"]
+          id?: string
+          seller_id: string
+        }
+        Update: {
+          created_at?: string
+          event?: Database["public"]["Enums"]["seller_event"]
+          id?: string
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_events_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seller_reports: {
+        Row: {
+          created_at: string
+          id: string
+          reason: string
+          seller_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reason: string
+          seller_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reason?: string
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_reports_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "sellers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       seller_updates: {
         Row: {
@@ -195,12 +279,15 @@ export type Database = {
           description: string | null
           id: string
           instagram_id: string
+          is_verified: boolean
           owner_name: string
+          phone: string | null
           profile_image_url: string | null
           slug: string
           status: Database["public"]["Enums"]["seller_status"]
           updated_at: string
           user_id: string
+          whatsapp: string | null
         }
         Insert: {
           base_location: string
@@ -210,12 +297,15 @@ export type Database = {
           description?: string | null
           id?: string
           instagram_id: string
+          is_verified?: boolean
           owner_name: string
+          phone?: string | null
           profile_image_url?: string | null
           slug: string
           status?: Database["public"]["Enums"]["seller_status"]
           updated_at?: string
           user_id: string
+          whatsapp?: string | null
         }
         Update: {
           base_location?: string
@@ -225,12 +315,15 @@ export type Database = {
           description?: string | null
           id?: string
           instagram_id?: string
+          is_verified?: boolean
           owner_name?: string
+          phone?: string | null
           profile_image_url?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["seller_status"]
           updated_at?: string
           user_id?: string
+          whatsapp?: string | null
         }
         Relationships: [
           {
@@ -282,11 +375,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      my_seller_stats: {
+        Args: { _seller_id: string }
+        Returns: {
+          event: Database["public"]["Enums"]["seller_event"]
+          total: number
+        }[]
+      }
       nammaspot_id_available: { Args: { _id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "seller"
       day_status: "open" | "closed" | "holiday"
+      seller_event:
+        | "view"
+        | "whatsapp"
+        | "call"
+        | "instagram"
+        | "share"
+        | "save"
       seller_status: "draft" | "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -417,6 +524,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "seller"],
       day_status: ["open", "closed", "holiday"],
+      seller_event: ["view", "whatsapp", "call", "instagram", "share", "save"],
       seller_status: ["draft", "pending", "approved", "rejected"],
     },
   },
